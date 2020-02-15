@@ -1,0 +1,77 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "MetInfo-JOYMO出品",
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons":[{//右边的icon，最多3个
+                            "fontSrc": "/static/uni.ttf",
+                            "text": "\ue101",
+                            "width": "auto",
+                            "fontSize": "48upx",
+                            "background": "rgba(0,0,0,0)"
+                        }]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/company/company",
+			"style": {
+				"navigationBarTitleText": "公司",
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons":[{//右边的icon，最多3个
+                            "fontSrc": "/static/uni.ttf",
+                            "text": "\ue101",
+                            "width": "auto",
+                            "fontSize": "48upx",
+                            "background": "rgba(0,0,0,0)"
+                        }]
+					}
+				}
+			}
+		}	],
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#666666",
+		"backgroundColor": "#808080"
+	},
+	"tabBar": {
+			"color": "#7A7E83",
+			"selectedColor": "#000000",
+			"borderStyle": "black",
+			"backgroundColor": "#ffffff",
+			"list": [{
+					"pagePath": "pages/index/index",
+					"iconPath": "static/home.png",
+					"selectedIconPath": "static/home_selected.png",
+					"text": "首页"
+				},
+				{
+					"pagePath": "pages/category/category",
+					"iconPath": "static/product.png",
+					"selectedIconPath": "static/product_selected.png",
+					"text": "产品"
+				},
+				{
+					"pagePath": "pages/category/category",
+					"iconPath": "static/news.png",
+					"selectedIconPath": "static/news_selected.png",
+					"text": "新闻"
+				},
+				{
+					"pagePath": "pages/company/company",
+					"iconPath": "static/compay.png",
+					"selectedIconPath": "static/compay_selected.png",
+					"text": "公司"
+				}
+			]
+		}
+	
+}
