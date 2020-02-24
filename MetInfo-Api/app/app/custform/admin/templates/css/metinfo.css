@@ -1,0 +1,56 @@
+/**/
+
+
+.temset .table.dataTable.stripe tbody tr.odd,
+.temset table.dataTable.display tbody tr.odd{ 
+background:#fff; 
+}
+.temset .table.dataTable.stripe tbody tr.fenqu,
+.temset table.dataTable.display tbody tr.fenqu{ 
+background:#eee;
+}
+.temset .table.dataTable.stripe tbody tr.fenqu:hover,.temset table.dataTable.display tbody tr.fenqu:hover{ 
+background:#eee!important;
+}
+.temset .dataTable tr.xuanxiang{ display:none!important; }
+.temset .dataTable tr.xuanxiang i{ display:none; }
+.temset .dataTable tr.fenqu i,.temset .dataTable tfoot tr i,.temset .dataTable thead tr i{ width:100%; display:block; font-size:22px; cursor:pointer; }
+.temset .dataTable th.formsubmit i{ display:inline; font-size:16px; }
+.temset .dataTables_info{ display:none; }
+.temset .dataTables_paginate{ display:none; }
+
+.temset tr .selectd{ display:none;}
+
+.temset_box{ text-align:left; font-size:12px; }
+.remodal{ padding:5px!important; border-radius:0px;}
+.remodal-close{ right:5px; left:auto; }
+
+.temset .zhanwei{ padding:2px; background:#ccc;}
+.temset .zhanwei td{}
+
+.temset table.dataTable.hover tbody tr:hover,
+.temset table.dataTable.hover tbody tr.odd:hover,
+.temset table.dataTable.hover tbody tr.even:hover,
+.temset table.dataTable.display tbody tr:hover,
+.temset table.dataTable.display tbody tr.odd:hover,
+.temset table.dataTable.display tbody tr:hover,
+.temset table.dataTable.display tbody tr.even:hover {
+  background-color: transparent;
+}
+
+.nowtem{ position:absolute; right:40px; top:70px; height:40px; line-height:40px; color:#666; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -430,7 +430,7 @@ class api extends common {
 	        'data' => $data,
 	    ];
 	    
-	    echo json_encode($result);
+	    echo jsonencode($result);
 	}
 	
 	/**
