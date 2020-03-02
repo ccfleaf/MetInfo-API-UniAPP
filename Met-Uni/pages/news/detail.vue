@@ -1,13 +1,13 @@
 <template>
 	<view>
 		<view class="banner">
-			<image class="banner-img" :src="banner.cover"></image>
+			<image class="banner-img" :src="banner.imgurl"></image>
 			<view class="banner-title">{{banner.title}}</view>
 		</view>
 		<view class="article-meta">
-			<text class="article-author">{{banner.author_name}}</text>
+			<text class="article-author">{{banner.publisher}}</text>
 			<text class="article-text">发表于</text>
-			<text class="article-time">{{banner.published_at}}</text>
+			<text class="article-time">{{banner.updatetime}}</text>
 		</view>
 		<view class="article-content">
 			<rich-text :nodes="htmlNodes"></rich-text>
@@ -22,6 +22,7 @@
 	const DETAIL_PAGE_PATH = '/pages/template/list2detail-detail/list2detail-detail';
 
 	import htmlParser from '@/common/html-parser'
+	var api = require('@/common/api.js');
 
 	function _handleShareChannels(provider) {
 		let channels = [];
@@ -120,10 +121,10 @@
 		},
 		methods: {
 			getDetail() {
-				uni.request({
-					url: 'https://unidemo.dcloud.net.cn/api/news/36kr/' + this.banner.post_id,
+				api.get({
+					url: '?c=news&a=donewsid&id=' + this.banner.id,
 					success: (data) => {
-						if (data.statusCode == 200) {
+						if (data.code = 1) {
 							var htmlString = data.data.content.replace(/\\/g, "").replace(/<img/g, "<img style=\"display:none;\"");
 							this.htmlNodes = htmlParser(htmlString);
 						}
