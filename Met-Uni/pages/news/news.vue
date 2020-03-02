@@ -1,18 +1,18 @@
 <template>
 	<view>
 		<view class="banner" @click="goDetail(banner)">
-			<image class="banner-img" :src="banner.cover"></image>
+			<image class="banner-img" :src="banner.imgurl"></image>
 			<view class="banner-title">{{ banner.title }}</view>
 		</view>
 		<view class="uni-list">
 			<view class="uni-list-cell" hover-class="uni-list-cell-hover" v-for="(value, key) in listData" :key="key" @click="goDetail(value)">
 				<view class="uni-media-list">
-					<image class="uni-media-list-logo" :src="value.cover"></image>
+					<image class="uni-media-list-logo" :src="value.imgurl"></image>
 					<view class="uni-media-list-body">
 						<view class="uni-media-list-text-top">{{ value.title }}</view>
 						<view class="uni-media-list-text-bottom">
-							<text>{{ value.author_name }}</text>
-							<text>{{ value.published_at }}</text>
+							<text>{{ value.publisher }}</text>
+							<text>{{ value.updatetime }}</text>
 						</view>
 					</view>
 				</view>
@@ -24,7 +24,9 @@
 
 <script>
 import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
+import htmlParser from '@/common/html-parser'
 var dateUtils = require('../../common/util.js').dateUtils;
+var api = require('@/common/api.js');
 
 export default {
 	components: {
@@ -61,14 +63,14 @@ export default {
 	methods: {
 		getBanner() {
 			let data = {
-				column: 'id,post_id,title,author_name,cover,published_at' //需要的字段名
+				column: 'id,title,publisher,imgurl,updatetime' //需要的字段名
 			};
-			uni.request({
-				url: 'https://unidemo.dcloud.net.cn/api/banner/36kr',
+			api.get({
+				url: '?c=news&a=donewsbanner',
 				data: data,
 				success: data => {
 					uni.stopPullDownRefresh();
-					if (data.statusCode == 200) {
+					if (data.code == 1) {
 						this.banner = data.data;
 					}
 				},
@@ -79,24 +81,28 @@ export default {
 		},
 		getList() {
 			var data = {
-				column: 'id,post_id,title,author_name,cover,published_at' //需要的字段名
+				column: 'id,title,publisher,imgurl,updatetime' //需要的字段名
 			};
 			if (this.last_id) {
 				//说明已有数据，目前处于上拉加载
 				this.status = 'loading';
 				data.minId = this.last_id;
-				data.time = new Date().getTime() + '';
+				//data.time = new Date().getTime() + '';
 				data.pageSize = 10;
 			}
-			uni.request({
-				url: 'https://unidemo.dcloud.net.cn/api/news',
+			api.get({
+				url: '?c=news&a=donewslist',
 				data: data,
 				success: data => {
-					if (data.statusCode == 200) {
+					if (data.data.length != 0) {
 						let list = this.setTime(data.data);
 						this.listData = this.reload ? list : this.listData.concat(list);
 						this.last_id = list[list.length - 1].id;
 						this.reload = false;
+					}
+					else {
+						this.reload = true;
+						this.status = "no more";
 					}
 				},
 				fail: (data, code) => {
@@ -109,11 +115,10 @@ export default {
 			// 					e.published_at = dateUtils.format(e.published_at);
 			// 				}
 			let detail = {
-				author_name: e.author_name,
-				cover: e.cover,
+				publisher: e.publisher,
+				imgurl: e.imgurl,
 				id: e.id,
-				post_id: e.post_id,
-				published_at: e.published_at,
+				updatetime: e.updatetime,
 				title: e.title
 			};
 			uni.navigateTo({
@@ -124,11 +129,10 @@ export default {
 			var newItems = [];
 			items.forEach(e => {
 				newItems.push({
-					author_name: e.author_name,
-					cover: e.cover,
+					publisher: e.publisher,
+					imgurl: e.imgurl,
 					id: e.id,
-					post_id: e.post_id,
-					published_at: dateUtils.format(e.published_at),
+					updatetime: dateUtils.format(e.updatetime),
 					title: e.title
 				});
 			});
