@@ -50,7 +50,7 @@ class formset extends admin {
 		$table = load::sys_class('tabledata', 'new'); //加载表格数据获取类
 		$where = "id ={$_M['form']['no']}";
 		$order = ""; //排序方式
-		$datas = $table->getdata('met_custform', '*', $where, $order);
+		$datas = $table->getdata("{$_M['config']['tablepre']}custform", '*', $where, $order);
 		$array = json_decode($datas[0]['value'],true);
 		$i = 1;
 		foreach($array as $key => $val) {
@@ -153,7 +153,7 @@ class formset extends admin {
         
         if($json!=''){
             $time = time();
-            $query = "UPDATE met_custform SET value='{$json}',addtime='{$time}' WHERE id = {$_M['form']['no']}";
+            $query = "UPDATE {$_M['config']['tablepre']}custform SET value='{$json}',addtime='{$time}' WHERE id = {$_M['form']['no']}";
             DB::query($query);
         }
         turnover("{$_M[url][own_form]}a=doset&no={$_M['form']['no']}", '操作成功');

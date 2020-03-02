@@ -31,7 +31,7 @@ class uninstall extends admin {
 	     deldir('../app/app/'.$this->appname);
 	     
 	     // 删除自定义表单所使用表
-	     DB::query("DROP TABLE IF EXISTS `met_custform`");
+	     DB::query("DROP TABLE IF EXISTS `{$_M['config']['tablepre']}custform`");
 	     */
 	    turnover("{$_M['url']['own_form']}a=doformlist","系统应用，无法卸载");
 	}

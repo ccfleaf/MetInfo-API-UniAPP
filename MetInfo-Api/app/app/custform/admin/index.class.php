@@ -19,12 +19,13 @@ class index extends admin {
 		nav::select_nav(1);
 		require $this->template('own/temlist');
 	}
+	
 	public function dotable_temlist_json() {
 		global $_M;
 		$table = load::sys_class('tabledata', 'new'); //加载表格数据获取类
 		$where = "";
 		$order = ""; //排序方式
-		$array = $table->getdata('met_custform', '*', $where, $order);
+		$array = $table->getdata("{$_M['config']['tablepre']}custform", '*', $where, $order);
 		foreach($array as $key => $val) {
 			$list = array();
 			$list[] = $val['title'];
@@ -50,7 +51,7 @@ class index extends admin {
 		global $_M;
 		if($_M['form']['temname']&&$_M['form']['temname']!=''){
 		    $time = time();
-			$query = "INSERT INTO met_custform SET title='{$_M['form']['temname']}',addtime='{$time}'";
+		    $query = "INSERT INTO {$_M['config']['tablepre']}custform SET title='{$_M['form']['temname']}',addtime='{$time}'";
 			DB::query($query);
 		}else{
 			turnover("{$_M[url][own_name]}c=index&a=doformlist",'操作失败！请填写表单名称！');
