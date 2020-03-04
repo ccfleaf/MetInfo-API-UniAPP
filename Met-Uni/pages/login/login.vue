@@ -16,7 +16,7 @@
 				<input type="text" class="code" value="" placeholder="请输入验证码" maxlength="4" @input="codeInput"/>
 				<view class="huoquyanzhengma" @click="getCode">{{codeBut}}</view>
 			</view>
-			<button class="cu-btn block bg-orange margin-tb-sm lg loginButton"> 登录</button>
+			<button class="cu-btn block bg-orange margin-tb-sm lg loginButton" @click="loginUp"> 登录</button>
 
 		</view>
 		<!-- 其他登录方式 -->
@@ -42,6 +42,7 @@
 </template>
 
 <script>
+	var api = require('@/common/api.js');
 	export default {
 		data() {
 			return {
@@ -56,7 +57,7 @@
 			}
 		},
 		onLoad() {
-			
+			this.signin()
 		},
 		methods: {
 			loginCode() {
@@ -102,9 +103,37 @@
 					});
 				}else{
 					//这里请求接口
+					this.signin();
 					console.log(_that.phone,_that.password,_that.code)
 				}
 			},
+			signin(){
+					api.post({
+						url: '?c=member&a=dosignin',
+						data: {
+							username: this.phone,
+							password: this.password
+						},
+						success: data => {
+							if(data.code == 1){
+								uni.switchTab({
+									url: '../index/index'
+								});
+
+							} else {
+								if(this.phone != '') {
+									uni.showToast({
+										title: '登录失败',
+										icon: 'none',
+										duration: 800
+									});
+								}
+								return
+							}
+						}
+					});					
+			},
+			
 			// 获取验证码
 			getCode(){
 				var _that = this
