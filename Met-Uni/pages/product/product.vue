@@ -1,406 +1,253 @@
 <template>
 	<view>
-		<view class="margin goods-list">
-			<view class="goods-item">
-				<view class="flex-sub margin-right radius">
-					<image src="https://image.weilanwl.com/gif/rhomb-black.gif" mode="aspectFit" class="gif-black response" style="height:240upx"></image>
-				</view>
-				<text class="title clamp">行政立法机关的产品都很好范德萨范德萨</text>
-			</view>
-			<view class="goods-item">
-				<view class="flex-sub margin-right radius">
-					<image src="/static/QQ.png" mode="aspectFit" class="gif-black response" style="height:240upx"></image>
-				</view>
-				<text class="title clamp">行政立法机关的产品都很好范德萨范德萨</text>
-			</view>
-		</view>
-		<view class="goods-list">
-			<view 
-				v-for="(item, index) in goodsList" :key="index"
-				class="goods-item"
-				@click="navToDetailPage(item)"
-			>
-				<view class="image-wrapper">
-					<image :src="item.image" mode="aspectFill"></image>
-				</view>
-				<text class="title clamp">{{item.title}}</text>
-				<view class="price-box">
-					<text class="price">{{item.price}}</text>
-					<text>已售 {{item.sales}}</text>
-				</view>
-			</view>
-		</view>
-		<uni-load-more :status="loadingType"></uni-load-more>
-		
-		<view class="cate-mask" :class="cateMaskState===0 ? 'none' : cateMaskState===1 ? 'show' : ''" @click="toggleCateMask">
-			<view class="cate-content" @click.stop.prevent="stopPrevent" @touchmove.stop.prevent="stopPrevent">
-				<scroll-view scroll-y class="cate-list">
-					<view v-for="item in cateList" :key="item.id">
-						<view class="cate-item b-b two">{{item.name}}</view>
-						<view 
-							v-for="tItem in item.child" :key="tItem.id" 
-							class="cate-item b-b" 
-							:class="{active: tItem.id==cateId}"
-							@click="changeCate(tItem)">
-							{{tItem.name}}
-						</view>
+		<view class="carousel">
+			<swiper indicator-dots circular=true duration="400">
+				<swiper-item class="swiper-item" v-for="(item,index) in imgList" :key="index">
+					<view class="image-wrapper">
+						<image
+							:src="item.src" 
+							class="loaded" 
+							mode="aspectFill"
+						></image>
 					</view>
-				</scroll-view>
+				</swiper-item>
+			</swiper>
+		</view>
+		
+		<view class="introduce-section">
+			<view class="title">{{title}}</view>
+			<view class="bot-row">
+				{{description}}
 			</view>
 		</view>
 		
+		<view class="c-list m-t">
+			<view class="c-row" v-for="(item, index) in paras" :key="index">
+				<text class="tit">{{item.name}}</text>
+				<text class="con">{{item.value}}</text>
+				<text class="yticon icon-you"></text>
+			</view>
+		</view>
+
+		<scroll-view scroll-x class="bg-white nav m-t">
+			<view class="flex text-center">
+				<view class="cu-item flex-sub" :class="index==TabCur?'text-orange cur':''" v-for="(item,index) in InfoList" :key="index" @tap="tabSelect" :data-id="index">
+					{{item.title}}
+				</view>
+			</view>
+		</scroll-view>
+				
+		<view class="detail-desc">
+			<rich-text :nodes="detail"></rich-text>
+		</view>
 	</view>
 </template>
 
 <script>
-	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
-	export default {
+	import share from '@/components/share';
+	var api = require('@/common/api.js');
+	export default{
 		components: {
-			uniLoadMore	
+			share
 		},
 		data() {
 			return {
-				cateMaskState: 0, //分类面板展开状态
-				headerPosition:"fixed",
-				headerTop:"0px",
-				loadingType: 'more', //加载更多状态
-				filterIndex: 0, 
-				cateId: 0, //已选三级分类id
-				priceOrder: 0, //1 价格从低到高 2价格从高到低
-				cateList: [],
-				goodsList: [{image:"https://image.weilanwl.com/gif/rhomb-white.gif",
-				title:"西放大放大就爱上了范德萨范德萨ttttttt",
-				price:29,
-				sales:20},
-				{image:"https://image.weilanwl.com/gif/rhomb-white.gif",
-				title:"ttttttt",
-				price:29,
-				sales:20},
-				{image:"https://image.weilanwl.com/gif/rhomb-white.gif",
-				title:"ttttttt",
-				price:29,
-				sales:20}]
+				TabCur: 0,
+				scrollLeft: 0,
+				title: '',
+				description: '',
+				paras: [],
+				InfoList:[{title:"详情信息",id:0},
+						  {title:"规格参数",id:0},
+						  {title:"包装清单",id:0}],
+				imgList: [],
+				detail: '',
+				content: '',
+				specs: '',
+				package: '',
 			};
 		},
-		
-		onLoad(options){
-			// #ifdef H5
-			this.headerTop = document.getElementsByTagName('uni-page-head')[0].offsetHeight+'px';
-			// #endif
-			this.cateId = options.tid;
-			this.loadCateList(options.fid,options.sid);
-			this.loadData();
+		async onLoad(options){
+			this.getdetail(options.id);
 		},
-		onPageScroll(e){
-			//兼容iOS端下拉时顶部漂移
-			if(e.scrollTop>=0){
-				this.headerPosition = "fixed";
-			}else{
-				this.headerPosition = "absolute";
-			}
-		},
-		//下拉刷新
-		onPullDownRefresh(){
-			this.loadData('refresh');
-		},
-		//加载更多
-		onReachBottom(){
-			this.loadData();
-		},
-		methods: {
-			//加载分类
-			async loadCateList(fid, sid){
-				let list = await this.$api.json('cateList');
-				let cateList = list.filter(item=>item.pid == fid);
-				
-				cateList.forEach(item=>{
-					let tempList = list.filter(val=>val.pid == item.id);
-					item.child = tempList;
-				})
-				this.cateList = cateList;
-			},
-			//加载商品 ，带下拉刷新和上滑加载
-			async loadData(type='add', loading) {
-				//没有更多直接返回
-				if(type === 'add'){
-					if(this.loadingType === 'nomore'){
-						return;
-					}
-					this.loadingType = 'loading';
-				}else{
-					this.loadingType = 'more'
-				}
-				
-				let goodsList = await this.$api.json('goodsList');
-				if(type === 'refresh'){
-					this.goodsList = [];
-				}
-				//筛选，测试数据直接前端筛选了
-				if(this.filterIndex === 1){
-					goodsList.sort((a,b)=>b.sales - a.sales)
-				}
-				if(this.filterIndex === 2){
-					goodsList.sort((a,b)=>{
-						if(this.priceOrder == 1){
-							return a.price - b.price;
+		methods:{
+			tabSelect(e) {
+				this.TabCur = e.currentTarget.dataset.id;
+				this.scrollLeft = (e.currentTarget.dataset.id - 1) * 60;
+				this.detail = this.TabCur == 0?this.content:(this.TabCur == 1?this.specs:this.package);
+				},
+			// 获取产品详情
+			getdetail(id) {
+				api.get({
+					url: '?c=product&a=dodetail&id='+id,
+					success: data => {
+						if(data.data.length ==0){
+							return
 						}
-						return b.price - a.price;
-					})
-				}
-				
-				this.goodsList = this.goodsList.concat(goodsList);
-				
-				//判断是否还有下一页，有是more  没有是nomore(测试数据判断大于20就没有了)
-				this.loadingType  = this.goodsList.length > 20 ? 'nomore' : 'more';
-				if(type === 'refresh'){
-					if(loading == 1){
-						uni.hideLoading()
-					}else{
-						uni.stopPullDownRefresh();
+						this.paras = data.data.para;
+						this.imgList = data.data.imgs;
+						this.title = data.data.title;
+						this.description = data.data.desc;
+						this.detail = this.content = data.data.content;
+						this.package = data.data.package;
+						this.specs = data.data.specs;
 					}
-				}
+				});
 			},
-			//筛选点击
-			tabClick(index){
-				if(this.filterIndex === index && index !== 2){
-					return;
-				}
-				this.filterIndex = index;
-				if(index === 2){
-					this.priceOrder = this.priceOrder === 1 ? 2: 1;
-				}else{
-					this.priceOrder = 0;
-				}
-				uni.pageScrollTo({
-					duration: 300,
-					scrollTop: 0
-				})
-				this.loadData('refresh', 1);
-				uni.showLoading({
-					title: '正在加载'
-				})
-			},
-			//显示分类面板
-			toggleCateMask(type){
-				let timer = type === 'show' ? 10 : 300;
-				let	state = type === 'show' ? 1 : 0;
-				this.cateMaskState = 2;
-				setTimeout(()=>{
-					this.cateMaskState = state;
-				}, timer)
-			},
-			//分类点击
-			changeCate(item){
-				this.cateId = item.id;
-				this.toggleCateMask();
-				uni.pageScrollTo({
-					duration: 300,
-					scrollTop: 0
-				})
-				this.loadData('refresh', 1);
-				uni.showLoading({
-					title: '正在加载'
-				})
-			},
-			//详情
-			navToDetailPage(item){
-				//测试数据没有写id，用title代替
-				let id = item.title;
-				uni.navigateTo({
-					url: `/pages/product/product?id=${id}`
-				})
-			},
-			stopPrevent(){}
 		},
+
 	}
 </script>
 
-<style lang="scss">
-	page, .content{
-		background: #ffffff;
+<style lang='scss'>
+	.icon-you{
+		font-size: $font-base + 2upx;
+		color: #888;
 	}
-	.content{
-		padding-top: 96upx;
-	}
-
-	.navbar{
-		position: fixed;
-		left: 0;
-		top: var(--window-top);
-		display: flex;
-		width: 100%;
-		height: 80upx;
-		background: #fff;
-		box-shadow: 0 2upx 10upx rgba(0,0,0,.06);
-		z-index: 10;
-		.nav-item{
-			flex: 1;
-			display: flex;
-			justify-content: center;
-			align-items: center;
+	.carousel {
+		height: 722upx;
+		position:relative;
+		swiper{
 			height: 100%;
-			font-size: 30upx;
-			color: #000000;
-			position: relative;
-			&.current{
-				color: #666666;
-				&:after{
-					content: '';
-					position: absolute;
-					left: 50%;
-					bottom: 0;
-					transform: translateX(-50%);
-					width: 120upx;
-					height: 0;
-					border-bottom: 4upx solid #000000;
-				}
-			}
-		}
-		.p-box{
-			display: flex;
-			flex-direction: column;
-			.yticon{
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				width: 30upx;
-				height: 14upx;
-				line-height: 1;
-				margin-left: 4upx;
-				font-size: 26upx;
-				color: #888;
-				&.active{
-					color: #666666;
-				}
-			}
-			.xia{
-				transform: scaleY(-1);
-			}
-		}
-		.cate-item{
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			height: 100%;
-			width: 80upx;
-			position: relative;
-			font-size: 44upx;
-			&:after{
-				content: '';
-				position: absolute;
-				left: 0;
-				top: 50%;
-				transform: translateY(-50%);
-				border-left: 1px solid #ddd;
-				width: 0;
-				height: 36upx;
-			}
-		}
-	}
-
-	/* 分类 */
-	.cate-mask{
-		position: fixed;
-		left: 0;
-		top: var(--window-top);
-		bottom: 0;
-		width: 100%;
-		background: rgba(0,0,0,0);
-		z-index: 95;
-		transition: .3s;
-		
-		.cate-content{
-			width: 630upx;
-			height: 100%;
-			background: #fff;
-			float:right;
-			transform: translateX(100%);
-			transition: .3s;
-		}
-		&.none{
-			display: none;
-		}
-		&.show{
-			background: rgba(0,0,0,.4);
-			
-			.cate-content{
-				transform: translateX(0);
-			}
-		}
-	}
-	.cate-list{
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-		.cate-item{
-			display: flex;
-			align-items: center;
-			height: 90upx;
-			padding-left: 30upx;
- 			font-size: 28upx;
-			color: #555;
-			position: relative;
-		}
-		.two{
-			height: 64upx;
-			color: #303133;
-			font-size: 30upx;
-			background: #f8f8f8;
-		}
-		.active{
-			color: #666666;
-		}
-	}
-
-	/* 商品列表 */
-	.goods-list{
-		display:flex;
-		flex-wrap:wrap;
-		padding: 0 30upx;
-		background: #fff;
-		.goods-item{
-			display:flex;
-			flex-direction: column;
-			width: 48%;
-			padding-bottom: 40upx;
-			&:nth-child(2n+1){
-				margin-right: 4%;
-			}
 		}
 		.image-wrapper{
 			width: 100%;
-			height: 330upx;
-			border-radius: 3px;
+			height: 100%;
+		}
+		.swiper-item {
+			display: flex;
+			justify-content: center;
+			align-content: center;
+			height: 750upx;
 			overflow: hidden;
-			image{
+			image {
 				width: 100%;
 				height: 100%;
-				opacity: 1;
 			}
 		}
+		
+	}
+	
+	/* 标题简介 */
+	.introduce-section{
+		background: #fff;
+		padding: 20upx 30upx;
+		
 		.title{
-			font-size: 32udpx;
-			color: #000000;
-			line-height: 80upx;
+			font-size: 32upx;
+			color: $font-color-dark;
+			height: 50upx;
+			line-height: 50upx;
 		}
 		.price-box{
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			padding-right: 10upx;
-			font-size: 24upx;
-			color: #666666;
+			display:flex;
+			align-items:baseline;
+			height: 64upx;
+			padding: 10upx 0;
+			font-size: 26upx;
+			color:$uni-color-primary;
 		}
 		.price{
-			font-size: 16upx;
-			color: $uni-color-primary;
+			font-size: $font-lg + 2upx;
+		}
+		.m-price{
+			margin:0 12upx;
+			color: $font-color-light;
+			text-decoration: line-through;
+		}
+		.coupon-tip{
+			align-items: center;
+			padding: 4upx 10upx;
+			background: $uni-color-primary;
+			font-size: $font-sm;
+			color: #fff;
+			border-radius: 6upx;
 			line-height: 1;
-			&:before{
-				content: '￥';
-				font-size: 26upx;
+			transform: translateY(-4upx); 
+		}
+		.bot-row{
+			display:flex;
+			align-items:center;
+			/*height: 50upx;*/
+			font-size: $font-sm;
+			color: $font-color-light;
+			text{
+				flex: 1;
 			}
 		}
 	}
 	
+	.c-list{
+		font-size: $font-sm + 2upx;
+		color: $font-color-base;
+		background: #fff;
+		.c-row{
+			display:flex;
+			align-items:center;
+			padding: 10upx 30upx;
+			position:relative;
+		}
+		.tit{
+			width: 140upx;
+		}
+		.con{
+			flex: 1;
+			color: $font-color-dark;
+			.selected-text{
+				margin-right: 10upx;
+			}
+		}
+		.bz-list{
+			height: 40upx;
+			font-size: $font-sm+2upx;
+			color: $font-color-dark;
+			text{
+				display: inline-block;
+				margin-right: 30upx;
+			}
+		}
+		.con-list{
+			flex: 1;
+			display:flex;
+			flex-direction: column;
+			color: $font-color-dark;
+			line-height: 40upx;
+		}
+		.red{
+			color: $uni-color-primary;
+		}
+	}
 
+	/*  详情 */
+	.detail-desc{
+		background: #fff;
+		padding: 20upx 30upx;;
+		.d-header{
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 80upx;
+			font-size: $font-base + 2upx;
+			color: $font-color-dark;
+			position: relative;
+				
+			text{
+				padding: 0 20upx;
+				background: #fff;
+				position: relative;
+				z-index: 1;
+			}
+			&:after{
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				transform: translateX(-50%);
+				width: 300upx;
+				height: 0;
+				content: '';
+				border-bottom: 1px solid #ccc; 
+			}
+		}
+	}
+	
 </style>
