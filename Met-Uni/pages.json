@@ -3,7 +3,7 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "MetInfo-JOYMO出品",
+				"navigationBarTitleText": "企业网站前端-角摩网出品",
 				"app-plus": {
 					"bounce": "vertical",
 					"titleNView": {
@@ -21,25 +21,13 @@
 		{
 			"path": "pages/company/company",
 			"style": {
-				"navigationBarTitleText": "公司",
-				"app-plus": {
-					"bounce": "vertical",
-					"titleNView": {
-						"buttons":[{//右边的icon，最多3个
-                            "fontSrc": "/static/uni.ttf",
-                            "text": "\ue101",
-                            "width": "auto",
-                            "fontSize": "48upx",
-                            "background": "rgba(0,0,0,0)"
-                        }]
-					}
-				}
+				"navigationBarTitleText": "公司"
 			}
 		},
 		{
 			"path": "pages/login/login",
 			"style": {
-				"navigationBarTitleText": "登录"
+				"navigationBarTitleText": "登录"				
 				}
 		},
 		{
@@ -57,8 +45,14 @@
 		{
 			"path": "pages/product/product",
 			"style": {
-				"navigationBarTitleText": "产品"
+				"navigationBarTitleText": "产品列表"
 				}
+		},
+		{
+			"path": "pages/product/detail",
+			"style": {
+				"navigationBarTitleText": "产品详情"
+			}
 		},
 		{
 			"path": "pages/news/news",

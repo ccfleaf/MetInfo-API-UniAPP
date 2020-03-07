@@ -59,23 +59,23 @@
 			}
 		},
 		onLoad(event) {
-			// TODO 后面把参数名替换成 payload
-			const payload = event.detailDate || event.payload;
+		// TODO 后面把参数名替换成 detail
+			const detailopt = event.detailopt;
 			// 目前在某些平台参数会被主动 decode，暂时这样处理。
 			try {
-				this.banner = JSON.parse(decodeURIComponent(payload));
+				this.banner = JSON.parse(decodeURIComponent(detailopt));
 			} catch (error) {
-				this.banner = JSON.parse(payload);
+				this.banner = JSON.parse(detailopt);
 			}
 			uni.setNavigationBarTitle({
 				title: this.banner.title
 			});
-			this.getDetail();
+			this.getDetail(this.banner.id);
 		},
 		onShareAppMessage() {
 			return {
 				title: this.banner.title,
-				path: DETAIL_PAGE_PATH + '?detailDate=' + JSON.stringify(this.banner)
+				path: DETAIL_PAGE_PATH + '?detailopt=' + JSON.stringify(this.banner)
 			}
 		},
 		onNavigationBarButtonTap(event) {
@@ -120,9 +120,9 @@
 			}
 		},
 		methods: {
-			getDetail() {
+			getDetail(nid) {
 				api.get({
-					url: '?c=news&a=donewsid&id=' + this.banner.id,
+					url: '?c=news&a=donewsid&id=' + nid,
 					success: (data) => {
 						if (data.code = 1) {
 							var htmlString = data.data.content.replace(/\\/g, "").replace(/<img/g, "<img style=\"display:none;\"");

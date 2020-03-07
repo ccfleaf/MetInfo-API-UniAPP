@@ -169,7 +169,7 @@
 			content: '';
 			width: 240upx;
 			heighg: 0;
-			border-top: 1px solid $border-color-base;
+			border-top: 1px solid $uni-border-color;
 			transform: scaleY(.5);
 			margin-right: 30upx;
 		}

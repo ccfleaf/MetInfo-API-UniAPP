@@ -122,7 +122,7 @@ export default {
 				title: e.title
 			};
 			uni.navigateTo({
-				url: 'detail?detailDate=' + encodeURIComponent(JSON.stringify(detail))
+				url: 'detail?detailopt=' + encodeURIComponent(JSON.stringify(detail))
 			});
 		},
 		setTime: function(items) {
@@ -130,7 +130,7 @@ export default {
 			items.forEach(e => {
 				newItems.push({
 					publisher: e.publisher,
-					imgurl: e.imgurl,
+					imgurl: api.HOST+'/'+e.imgurl,
 					id: e.id,
 					updatetime: dateUtils.format(e.updatetime),
 					title: e.title

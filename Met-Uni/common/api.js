@@ -53,9 +53,11 @@ module.exports = {
 				'Content-Type': 'application/x-www-form-urlencoded',
 				'XX-Token': token,
 				'XX-Device-Type': device_type,
+				'Access-Control-Allow-Origin':'*'
 			},
 			success: res => {
 				var data = res.data;
+				console.log(res.header);
 				if (data.code == 10001) {
 					uni.showModal({
 						title: '提示',

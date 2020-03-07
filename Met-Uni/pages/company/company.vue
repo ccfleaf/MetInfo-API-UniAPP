@@ -110,9 +110,9 @@
 				},
 			getContact() {
 			api.get({
-				url: '?c=about&a=docontact',
+				url: '?c=about&a=doabout',
 				data: {
-					no: 558,
+					no: 1,
 				},
 				success: data => {
 					if(data.data.length ==0){
