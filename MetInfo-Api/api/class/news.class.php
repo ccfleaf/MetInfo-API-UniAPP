@@ -28,7 +28,7 @@ class news extends api {
   public function donewslist() {
 		global $_M;
 
-		$query = "SELECT id,title,content,concat('http://".$_SERVER['HTTP_HOST']."/',imgurl) as imgurl,updatetime,publisher FROM {$_M['table']['news']} ";
+		$query = "SELECT id,title,content,imgurl,updatetime,publisher FROM {$_M['table']['news']} ";
 		$where = "WHERE top_ok<>1 and lang = 'cn'";
 		$where .= $_M['form']['minId']?" AND id<{$_M['form']['minId']}":'';
 		$pagesize = $_M['form']['pageSize']?$_M['form']['pageSize']:10;

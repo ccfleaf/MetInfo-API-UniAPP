@@ -15,7 +15,7 @@ class about extends api {
 		parent::__construct();
 	}
 
-	public function docontact() {
+	public function doabout() {
 	   global $_M;
 	   $query = "SELECT value FROM {$_M['config']['tablepre']}custform WHERE id = {$_M['form']['no']}";
 	   $ret = DB::get_one($query);

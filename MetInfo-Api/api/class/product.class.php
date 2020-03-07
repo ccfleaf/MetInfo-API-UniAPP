@@ -44,21 +44,7 @@ class product extends api {
 
 		$ret = load::sys_class('label', 'new')->get('product')->get_list_page(4,$_M['form']['page'],0);
 		$this->success("success",$ret);
-		
   }
-
-	public function donewsbanner(){
-	    global $_M;
-	    
-	    $query = "SELECT id,title,content,concat('http://".$_SERVER['HTTP_HOST']."/',imgurl) as imgurl,updatetime,publisher FROM {$_M['table']['news']} ";
-	    $where = "WHERE top_ok=1 and lang = 'cn'";
-	    $order = " ORDER BY id DESC";
-	    
-	    $query .= $where.$order;
-	    $ret = DB::get_one($query);
-
-	    $this->success("success",$ret);
-	}
 
 }
 

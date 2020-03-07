@@ -431,6 +431,7 @@ class api extends common {
 	    ];
 	    
 	    echo jsonencode($result);
+	    exit;
 	}
 	
 	/**
@@ -455,6 +456,7 @@ class api extends common {
 	    ];
 	    
 	    echo json_encode($result);
+	    exit;
 	}
 	
 	
