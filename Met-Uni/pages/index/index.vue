@@ -3,12 +3,13 @@
 		<swiper class="screen-swiper" :class="dotStyle?'square-dot':'round-dot'" :indicator-dots="true" :circular="true"
 		 :autoplay="true" interval="5000" duration="500">
 			<swiper-item v-for="(item,index) in swiperList" :key="index">
-				<image :src="item.url" mode="aspectFill" v-if="item.type=='image'"></image>
-				<video :src="item.url" autoplay loop muted :show-play-btn="false" :controls="false" objectFit="cover" v-if="item.type=='video'"></video>
+				<image :src="item.imgurl" mode="aspectFill" v-if="item.type=='image'"></image>
+				<video :src="item.imgurl" autoplay loop muted :show-play-btn="false" :controls="false" objectFit="cover" v-if="item.type=='video'"></video>
+				<view class="text-item uni-bg-red" mode="aspectFill" v-if="item.type=='text'">{{item.title}}</view>
 			</swiper-item>
 		</swiper>
 
-		<view class="cu-list menu-avatar">
+		<view class="cu-list menu-avatar" @click="navToDetailPage('product',0)">
 			<view class="cu-item">
 				<view class="tit-bar">
 					<image class="tit-icon" src="../../static/product_selected.png" />
@@ -27,24 +28,20 @@
 			</view>
 		</view>
 		
-		<view class="goods-list">
+		<view class="goods-list  dashed-top">
 			<view 
 				v-for="(item, index) in goodsList" :key="index"
 				class="goods-item"
-				@click="navToDetailPage(item)"
+				@click="navToDetailPage('product',item)"
 			>
 				<view class="image-wrapper">
-					<image class="goods-img"  :src="item.image" mode="aspectFill"></image>
+					<image class="goods-img"  :src="item.imgurl" mode="aspectFill"></image>
 				</view>
 				<text class="title">{{item.title}}</text>
-				<view class="price-box">
-					<text class="price">价格:{{item.price}}元</text>
-					<text>已售 {{item.sales}}</text>
-				</view>
 			</view>
 		</view>
 	
-		<view class="cu-list menu-avatar m-t">
+		<view class="cu-list menu-avatar m-t" @click="navToDetailPage('news',null)">
 			<view class="cu-item">
 				<view class="tit-bar">
 					<image class="tit-icon" src="../../static/news_selected.png" />
@@ -64,14 +61,14 @@
 		</view>
 		
 		<view class="uni-list">
-			<view class="uni-list-cell" hover-class="uni-list-cell-hover" v-for="(value, key) in news" :key="key" @click="goDetail(value)">
+			<view class="uni-list-cell" hover-class="uni-list-cell-hover" v-for="(value, key) in news" :key="key" @click="navToDetailPage('news',value)">
 				<view class="uni-media-list">
-					<image class="uni-media-list-logo" :src="value.image_url"></image>
+					<image class="uni-media-list-logo" :src="value.imgurl"></image>
 					<view class="uni-media-list-body">
-						<view class="uni-media-list-text-top">{{ value.desc }}</view>
+						<view class="uni-media-list-text-top">{{ value.title }}</view>
 						<view class="uni-media-list-text-bottom">
-							<text>{{ value.source }}</text>
-							<text>{{ value.datetime }}</text>
+							<text>{{ value.publisher }}</text>
+							<text>{{ value.updatetime }}</text>
 						</view>
 					</view>
 				</view>
@@ -81,94 +78,17 @@
 </template>
 
 <script>
+	var api = require('@/common/api.js');
 	export default {
 		data() {
 			return {
 				cardCur: 0,
-				swiperList: [{
-					id: 0,
-					type: 'image',
-					url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big84000.jpg'
-				}, {
-					id: 1,
-					type: 'image',
-					url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big37006.jpg',
-				}, {
-					id: 2,
-					type: 'image',
-					url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big39000.jpg'
-				}, {
-					id: 3,
-					type: 'image',
-					url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg'
-				}, {
-					id: 4,
-					type: 'image',
-					url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big25011.jpg'
-				}, {
-					id: 5,
-					type: 'image',
-					url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big21016.jpg'
-				}, {
-					id: 6,
-					type: 'image',
-					url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg'
-				}],
+				swiperList: [],
 				dotStyle: false,
 				towerStart: 0,
-				goodsList:[{
-					image:"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553187020783&di=bac9dd78b36fd984502d404d231011c0&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201609%2F26%2F20160926173213_s5adi.jpeg",
-					title:"商务衬衫的范德萨范德萨发答案",
-					price:20,
-					sales:5
-				},
-				{
-					image:"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553187020783&di=bac9dd78b36fd984502d404d231011c0&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201609%2F26%2F20160926173213_s5adi.jpeg",
-					title:"商务衬衫",
-					price:20,
-					sales:5
-				},
-				{
-					image:"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553187020783&di=bac9dd78b36fd984502d404d231011c0&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201609%2F26%2F20160926173213_s5adi.jpeg",
-					title:"商务衬衫",
-					price:20,
-					sales:5
-				},
-				{
-					image:"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553187020783&di=bac9dd78b36fd984502d404d231011c0&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201609%2F26%2F20160926173213_s5adi.jpeg",
-					title:"商务衬衫",
-					price:20,
-					sales:5
-				}],
+				goodsList:[],
 				direction: '',
-				news:[{image_url:"/static/QQ.png",
-						desc:"测试测试",
-						source:"BBC",
-						datetime:"6月5日"},
-						{image_url:"/static/QQ.png",
-								desc:"测试测发大苏打撒范德萨范德萨发大水范德萨试",
-								source:"BBC",
-								datetime:"6月5日"},
-						{image_url:"https://ossweb-img.qq.com/images/lol/web201310/skin/big39000.jpg",
-								desc:"测试测试",
-								source:"BBC",
-								datetime:"6月5日"},
-						{image_url:"/static/QQ.png",
-								desc:"测试测试",
-								source:"BBC",
-								datetime:"6月5日"},
-						{image_url:"/static/QQ.png",
-								desc:"测试测试",
-								source:"BBC",
-								datetime:"6月5日"},
-						{image_url:"/static/QQ.png",
-								desc:"测试测试",
-								source:"BBC",
-								datetime:"6月5日"},
-						{image_url:"/static/QQ.png",
-								desc:"测试测试",
-								source:"BBC",
-								datetime:"6月5日"}]
+				news:[]
 			};
 		},
 		onNavigationBarButtonTap(e) {
@@ -178,10 +98,83 @@
 				});
 		},
 		onLoad() {
+			this.getBanner();
 			this.TowerSwiper('swiperList');
-			// 初始化towerSwiper 传已有的数组名即可
+			this.getProductList();
+			this.getNewsList();
 		},
 		methods: {
+			async getProductList() {
+				api.get({
+					url: '?c=home&a=doproductlist',
+					success: data => {
+						if (data.data.length != 0) {
+							this.goodsList = this.setTime(data.data);
+						}
+					},
+					fail: (data, code) => {
+						console.log('fail' + JSON.stringify(data));
+					}
+				});
+			},
+			getNewsList() {
+				var data = {
+					column: 'id,title,publisher,imgurl,updatetime' //需要的字段名
+				};
+				api.get({
+					url: '?c=news&a=donewslist',
+					success: data => {
+						if (data.data.length != 0) {
+							this.news = this.setTime(data.data);
+						}
+					},
+					fail: (data, code) => {
+						console.log('fail' + JSON.stringify(data));
+					}
+				});
+			},
+			getBanner() {
+				api.get({
+					url: '?c=home&a=dobanner',
+					success: data => {
+						if (data.data.length != 0) {
+							this.swiperList = this.setTime(data.data);
+						}
+					},
+					fail: (data, code) => {
+						console.log('fail' + JSON.stringify(data));
+					}
+				});
+			},
+			setTime: function(items) {
+				var newItems = [];
+				items.forEach(e => {
+					newItems.push({
+						imgurl: api.HOST+'/'+e.imgurl,
+						id: e.id,
+						title: e.title,
+						publisher: e.publisher,
+						updatetime: e.updatetime,
+						type: "image"
+					});
+				});
+				return newItems;
+			},
+			//跳转
+			navToDetailPage(type,option){
+				//测试数据没有写id，用title代替
+				if(option){
+					uni.navigateTo({
+					url: "/pages/"+type+"/detail?detailopt=" + encodeURIComponent(JSON.stringify(option)),
+					})
+				}
+				else
+				{
+					uni.switchTab({
+					url: "/pages/"+type+"/"+type,
+					})
+				}
+			},
 			DotStyle(e) {
 				this.dotStyle = e.detail.value
 			},
@@ -241,6 +234,12 @@
 </script>
 
 <style>
+	.text-item {
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 
 	.tower-swiper .tower-item {
 		transform: scale(calc(0.5 + var(--index) / 10));
