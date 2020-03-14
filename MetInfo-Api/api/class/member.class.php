@@ -15,6 +15,9 @@ class member extends api {
 		$this->userclass = load::sys_class('user', 'new');
 	}
 
+	/**
+	 * 登录接口，会在header中返回身份认证的auth和key，前端需要记录，并每次带到服务端
+	 */
 	public function dosignin(){
 	    global $_M;
 	    $session = load::sys_class('session', 'new');

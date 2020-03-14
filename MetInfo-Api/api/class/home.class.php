@@ -12,6 +12,9 @@ class home extends api {
 		parent::__construct();
 	}
 
+	/**
+	 * 首页产品区列表接口
+	 */
 	public function doproductlist(){
 	    global $_M;
 	    
@@ -20,6 +23,9 @@ class home extends api {
 	    $this->success("success",$ret);
 	}
 	
+	/**
+	 * 首页新闻区列表接口
+	 */
     public function dolist() {
     	global $_M;
     
@@ -27,9 +33,13 @@ class home extends api {
     	$this->success("success",$ret);
     }
     
+    /**
+     * 首页幻灯接口
+     */
     public function dobanner(){
       global $_M;
       
+      // 提取的参数统一命名，便于前端用统一函数处理
       $query = "SELECT id,img_title as title,img_path as imgurl FROM {$_M['table']['flash']} ";
       $where = "WHERE wap_ok=0 and lang = 'cn'";
       $order = " ORDER BY no_order";

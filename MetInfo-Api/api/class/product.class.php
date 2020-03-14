@@ -12,6 +12,9 @@ class product extends api {
 		parent::__construct();
 	}
 
+	/**
+	 * 获取产品详情页接口
+	 */
 	public function dodetail(){
 	    global $_M;
 	    
@@ -35,16 +38,18 @@ class product extends api {
 	        $ret['imgs'][0] = ['title'=>'','src'=>"http://".$_SERVER['HTTP_HOST']."/".$data['imgurl']];
 	    }
 	    
-	    
 	    $this->success("success",$ret);
 	}
 	
-  public function dolist() {
+	/**
+	 * 获取产品列表接口
+	 */
+    public function dolist() {
 		global $_M;
 
 		$ret = load::sys_class('label', 'new')->get('product')->get_list_page(4,$_M['form']['page'],0);
 		$this->success("success",$ret);
-  }
+    }
 
 }
 
