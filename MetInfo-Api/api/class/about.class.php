@@ -42,6 +42,25 @@ class about extends api {
 	   $this->success("success",$infos);
 	}
 	
+	/**
+	 * 获取联系方式（电话、QQ)
+	 */
+	public function docustomsrv() {
+	    
+	    global $_M;
+	    $ret = array();
+	    $table = load::sys_class('tabledata', 'new');
+	    $where = "lang='{$_M['lang']}' and type in (0, 3)";
+	    $list = $table->getdata($_M['table']['online'], 'value,type', $where, "no_order");
+	    foreach($list as $k=>$v) {
+	        if($v['type'] == '3')
+	           $ret['phone'] = $v;
+	        elseif($v['type'] == '0')
+	           $ret['qq'][] = $v;
+	    }
+	    $this->success("success", $ret);
+	}
+	
 }
 
 ?>
