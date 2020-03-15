@@ -8,6 +8,7 @@
 				<view class="text-item uni-bg-red" mode="aspectFill" v-if="item.type=='text'">{{item.title}}</view>
 			</swiper-item>
 		</swiper>
+		<uni-fab ref="fab" :pattern="pattern" :content="content" horizontal="right" vertical="bottom" :direction="direction" @trigger="trigger" />
 
 		<view class="cu-list menu-avatar" @click="navToDetailPage('product',0)">
 			<view class="cu-item">
@@ -78,8 +79,12 @@
 </template>
 
 <script>
+	import uniFab from '@/components/uni-fab/uni-fab.vue'
 	var api = require('@/common/api.js');
 	export default {
+		components: {
+			uniFab
+		},
 		data() {
 			return {
 				cardCur: 0,
@@ -87,8 +92,34 @@
 				dotStyle: false,
 				towerStart: 0,
 				goodsList:[],
-				direction: '',
-				news:[]
+				news:[],
+				direction: 'vertical',
+				customSrv: [],
+				pattern: {
+					color: '#7A7E83',
+					backgroundColor: '#fff',
+					selectedColor: '#007AFF',
+					buttonColor: '#007AFF'
+				},
+				content: [{
+						iconPath: '/static/phone.png',
+						selectedIconPath: '/static/phone.png',
+						text: '电话',
+						active: false
+					},
+					{
+						iconPath: '/static/QQ-1.png',
+						selectedIconPath: '/static/QQ-1.png',
+						text: 'QQ1',
+						active: false
+					},
+					{
+						iconPath: '/static/QQ-1.png',
+						selectedIconPath: '/static/QQ-1.png',
+						text: 'QQ2',
+						active: false
+					}
+				]
 			};
 		},
 		onNavigationBarButtonTap(e) {
@@ -102,6 +133,7 @@
 			this.TowerSwiper('swiperList');
 			this.getProductList();
 			this.getNewsList();
+			this.getCustomerSrv();
 		},
 		methods: {
 			async getProductList() {
@@ -133,6 +165,19 @@
 					}
 				});
 			},
+			getCustomerSrv() {
+				api.get({
+					url: '?c=about&a=docustomsrv',
+					success: data => {
+						if (data.data.length != 0) {
+							this.customSrv = data.data;
+						}
+					},
+					fail: (data, code) => {
+						console.log('fail' + JSON.stringify(data));
+					}
+				});
+			},
 			getBanner() {
 				api.get({
 					url: '?c=home&a=dobanner',
@@ -145,6 +190,26 @@
 						console.log('fail' + JSON.stringify(data));
 					}
 				});
+			},
+			dial(phone) {
+				uni.makePhoneCall({
+				    phoneNumber: phone
+				});
+			},
+			trigger(e) {
+				console.log(e);
+				//this.content[e.index].active = !e.item.active;
+				switch(e.index){
+					case 0:
+					this.dial(this.customSrv.phone.value);
+					break;
+					case 1:
+					plus.runtime.openURL('mqq://im/chat?chat_type=wpa&uin=' + this.customSrv.qq[0].value+ '&version=1&src_type=web ');
+					break;
+					case 2:
+					plus.runtime.openURL('mqq://im/chat?chat_type=wpa&uin=' + this.customSrv.qq[1].value+ '&version=1&src_type=web ');
+					break;
+				}
 			},
 			setTime: function(items) {
 				var newItems = [];

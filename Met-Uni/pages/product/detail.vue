@@ -71,7 +71,8 @@
 			const detailopt = options.detailopt;
 			let infos = JSON.parse(decodeURIComponent(detailopt));
 			console.log(infos);
-			this.getdetail(infos.id);
+			this.getDetail(infos.id);
+			this.imgAdapt();
 		},
 		methods:{
 			tabSelect(e) {
@@ -80,7 +81,7 @@
 				this.detail = this.TabCur == 0?this.content:(this.TabCur == 1?this.specs:this.package);
 				},
 			// 获取产品详情
-			getdetail(id) {
+			getDetail(id) {
 				api.get({
 					url: '?c=product&a=dodetail&id='+id,
 					success: data => {
@@ -97,6 +98,14 @@
 					}
 				});
 			},
+			imgAdapt(){
+			//获取图片元素
+			let imgs = document.getElementsByTagName("img");
+			//使用js设置图片元素宽度的变化    
+			for(let i=0; i<imgs.length; i++){
+			        imgs[i].style["max-width"] = "100%";
+			    }
+			}
 		},
 
 	}
