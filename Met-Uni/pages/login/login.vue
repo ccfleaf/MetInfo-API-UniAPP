@@ -57,7 +57,7 @@
 			}
 		},
 		onLoad() {
-			this.signIn()
+			this.signin()
 		},
 		methods: {
 			loginCode() {
@@ -103,11 +103,11 @@
 					});
 				}else{
 					//这里请求接口
-					this.signIn();
+					this.signin();
 					console.log(_that.phone,_that.password,_that.code)
 				}
 			},
-			signIn(){
+			signin(){
 					api.post({
 						url: '?c=member&a=dosignin',
 						data: {
