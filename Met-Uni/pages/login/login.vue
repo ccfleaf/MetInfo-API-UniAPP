@@ -35,8 +35,8 @@
 
 		<!-- 忘记密码/新用户注册 -->
 		<view class="bottomBox">
-			<view class="wangjimima">忘记密码</view>
-			<view class="yonghuzhuce">用户注册</view>
+			<view class="wangjimima" @click="forget">忘记密码</view>
+			<view class="yonghuzhuce" @click="register">用户注册</view>
 		</view>
 	</view>
 </template>
@@ -79,6 +79,18 @@
 			// 验证码输入
 			codeInput(e){
 				this.code = e.detail.value
+			},
+			// 忘记密码
+			forget() {
+				uni.navigateTo({
+					url: "./forget"
+				})
+			},
+			// 用户注册
+			register() {
+				uni.navigateTo({
+					url: "./register"
+				})
 			},
 			// 点击登录
 			loginUp(){
