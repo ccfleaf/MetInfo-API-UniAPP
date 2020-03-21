@@ -53,9 +53,7 @@
 		methods: {
 			//加载商品 ，带下拉刷新和上滑加载
 			async loadData() {
-				var data = {
-					column: 'id,title,imgurl' //需要的字段名
-				};
+				var data = {};
 				if (this.page) {
 					//说明已有数据，目前处于上拉加载
 					//this.status = 'loading';
