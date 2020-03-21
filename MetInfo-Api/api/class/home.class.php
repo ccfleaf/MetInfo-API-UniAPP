@@ -18,7 +18,7 @@ class home extends api {
 	public function doproductlist(){
 	    global $_M;
 	    
-	    $ret = load::sys_class('label', 'new')->get('product')->get_module_list(4,4,'all');
+	    $ret = load::sys_class('label', 'new')->get('product')->get_module_list($lang['index_product_id'],4,'all');
 	    
 	    $this->success("success",$ret);
 	}
