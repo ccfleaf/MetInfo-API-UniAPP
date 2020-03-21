@@ -47,7 +47,7 @@ class product extends api {
     public function dolist() {
 		global $_M;
 
-		$ret = load::sys_class('label', 'new')->get('product')->get_list_page(4,$_M['form']['page'],0);
+		$ret = load::sys_class('label', 'new')->get('product')->get_list_page($lang['index_product_id'],$_M['form']['page'],0);
 		$this->success("success",$ret);
     }
 
