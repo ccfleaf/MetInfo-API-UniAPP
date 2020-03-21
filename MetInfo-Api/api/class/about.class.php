@@ -28,7 +28,7 @@ class about extends api {
        }
        $infos['touch'] = $touch;
 	   
-       $query = "SELECT content FROM {$_M['table']['column']} WHERE id = ".$this->comid;
+       $query = "SELECT content FROM {$_M['table']['column']} WHERE foldername = 'about' and name='公司简介'";
        $ret = DB::get_one($query);
        $infos['profile'] = $ret['content'];
        
