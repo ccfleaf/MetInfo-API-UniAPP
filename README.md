@@ -1,5 +1,9 @@
 # MetInfo-API-UniAPP
+<<<<<<< HEAD
 通过UniAPP实现米拓MetInfo的前端，MetInfo是一个企业建站的项目（非本人项目），在没有改变原来代码的基础上，把API独立出来给前端使用，该API只支持metinfo7.0及以上版本。
+=======
+通过UniAPP实现MetInfo的前端，MetInfo是一个企业建站的项目（非本人项目），在没有改变原来代码的基础上，把API独立出来给前端使用。API仅支持metinfo7.0版本，metinfo的5和6版本有sql漏洞。
+>>>>>>> 872239802e8699125db4f716bed9cb2c0c5ef158
 
 该服务端的代码请在本人的网站www.joymo.cc 或 https://github.com/ccfleaf/MetInfo-API-UniAPP 中下载。
 

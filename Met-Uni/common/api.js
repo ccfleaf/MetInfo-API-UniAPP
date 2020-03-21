@@ -13,7 +13,7 @@ var device_type = 'wxapp'
 
 var app = getApp();
 
-var host = "http://www.test.com";  //替换为自己的域名,小程序需要https
+var host = "http://www.test.com/";  //替换为自己的域名,小程序需要https
 module.exports = {
 	HOST: host,
 	API_ROOT: host + '/api/',
