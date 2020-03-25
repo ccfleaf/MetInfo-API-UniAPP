@@ -20,9 +20,9 @@
 				<view class="cu-bar bg-white solid-bottom m-t">
 					<view class="action">
 						<text class="cuIcon-titles text-orange ">{{item.position}}</text> 
-						<text class="cuIcon-location text-gray"><span class="uni-text-small">{{item.place}}</span></text> 
-						<text class="cuIcon-people text-gray uni-text-small"><span class="uni-text-small">{{item.count}}</span></text> 
-						<text class="cuIcon-moneybag text-gray "><span class="uni-text-small">{{item.deal}}</span></text>
+						<text class="cuIcon-location text-gray"></text><text class="uni-text-small text-gray margin-right">{{item.place}}</text>
+						<text class="cuIcon-people text-gray"></text> <text class="uni-text-small text-gray margin-right">{{item.count}}</text>
+						<text class="cuIcon-moneybag text-gray "></text><text class="uni-text-small text-gray margin-right">{{item.deal}}</text>
 					</view>
 				</view>
 				<view class="article-content margin">
