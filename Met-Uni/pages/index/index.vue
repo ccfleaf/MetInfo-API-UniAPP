@@ -298,7 +298,7 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
 	.text-item {
 		height: 100%;
 		display: flex;
@@ -340,48 +340,47 @@
 		flex-wrap:wrap;
 		padding: 0 30upx;
 		background: #fff;
-		}
-	.goods-list	.goods-item{
+		.goods-item{
 			display:flex;
 			flex-direction: column;
-			width: 50%;
+			width:48%;
 			padding: 10upx 20upx 10upx;
 			&:nth-child(2n+1){
 				margin-right: 4%;
 			}
 		}
-	.goods-list	.image-wrapper{
+		.image-wrapper{
 			width: 100%;
-			height: 320upx;
+			height: 330upx;
 			border-radius: 3px;
 			overflow: hidden;
-
+			image{
+				width: 100%;
+				height: 100%;
+				opacity: 1;
+			}
 		}
-		.goods-img{
-			width: 100%;
-			height: 100%;
-			opacity: 1;
+		.title{
+			font-size: 32udpx;
+			color: #000000;
+			/*line-height: 80upx;*/
 		}
-	.goods-list	.title{
-			font-size: $font-lg;
-			color: $font-color-dark;
-			line-height: 40upx;
-		}
-	.goods-list	.price-box{
+		.price-box{
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
 			padding-right: 10upx;
 			font-size: 24upx;
-			color: $font-color-light;
+			color: #666666;
 		}
-	.goods-list	.price{
-			font-size: $font-lg;
-			color: #fa436a;
+		.price{
+			font-size: 16upx;
+			color: $uni-color-primary;
 			line-height: 1;
 			&:before{
 				content: '￥';
 				font-size: 26upx;
 			}
 		}
+	}
 </style>
